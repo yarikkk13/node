@@ -6,9 +6,12 @@
 
 const fs = require('fs')
 const path = require('path')
-const girlz = path.join(__dirname,'girlz')
-const boyz = path.join(__dirname,'boyz')
+const {readDir, readFile, rename} = require('./helpers/async.helper')
+const girlz = path.join(__dirname, 'girlz')
+const boyz = path.join(__dirname, 'boyz')
 
+
+//this chunk of code do not uncomment if users exists
 // // cycle for creating boys
 // for (let num = 0; num < 10; num++) {
 //     const filePath = path.join(boyz, `max${num}.json`);
@@ -30,7 +33,6 @@ const boyz = path.join(__dirname,'boyz')
 //         });
 //     }
 // }
-
 // //cycle for creating girls
 // for (let num = 10; num < 20; num++) {
 //     const filePath = path.join(girlz, `karina${num}.json`);
