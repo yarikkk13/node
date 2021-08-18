@@ -6,11 +6,12 @@
 
 const fs = require('fs')
 const path = require('path')
-console.log(__dirname)
+const girlz = path.join(__dirname,'girlz')
+const boyz = path.join(__dirname,'boyz')
 
-// //cycle for creating boys
+// // cycle for creating boys
 // for (let num = 0; num < 10; num++) {
-//     const filePath = path.join(__dirname, 'boyz', `${num}.json`);
+//     const filePath = path.join(boyz, `max${num}.json`);
 //     if (num % 2 === 0) {
 //         fs.writeFile(filePath, `{"name":"max${num}","gender":"female"}`, err => {
 //             if (err) {
@@ -32,7 +33,7 @@ console.log(__dirname)
 
 // //cycle for creating girls
 // for (let num = 10; num < 20; num++) {
-//     const filePath = path.join(__dirname, 'girlz', `${num}.json`);
+//     const filePath = path.join(girlz, `karina${num}.json`);
 //     if (num % 2 === 0) {
 //         fs.writeFile(filePath, `{"name":"karina${num}","gender":"male"}`, err => {
 //             if (err) {
