@@ -15,6 +15,7 @@ const usersPath = path.join(__dirname, 'database', 'users.json');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(staticPath));
+
 app.set('view engine', '.hbs');
 app.engine('.hbs', handlebars({defaultLayout: false}));
 app.set('views', staticPath);
@@ -42,15 +43,16 @@ app.get('/login', (req, res) => {
     res.render('login')
 })
 
-app.get('/users', (req, res) => {
-    const users = async () => {
+app.get('/users', async (req, res) => {
+    const getUsers = async () => {
         const getUser = await readFile(usersPath);
-        console.log(JSON.parse(getUser))
         return JSON.parse(getUser);
     }
+    users = await getUsers()
     return res.render('users', {users});
 })
 
+// application
 app.listen(PORT, () => {
     console.log('app listen port', PORT)
 })
