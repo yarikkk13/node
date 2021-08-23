@@ -2,11 +2,15 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const path = require('path');
 
+
 const {PORT} = require('./configs/config');
-const users = require('./database/users');
+const {BAD_REQUEST, UNAUTH} = require('./configs/statusCodes.enum');
+const {readDir, readFile, writeFile} = require('./helper/async')
+
 
 const app = express();
 const staticPath = path.join(__dirname, 'static');
+const usersPath = path.join(__dirname, 'database', 'users.json');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -38,10 +42,6 @@ app.post('/auth', (req, res) => {
 
 })
 
-// app.get('/users', (req, res) => {
-//     res.json(users)
-// })
-
 app.get('/users/:user_id', (req, res) => {
     const {user_id} = req.params
     res.json(users[user_id])
@@ -53,8 +53,12 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/users', (req, res) => {
-    res.render('users',)
-
+    const users = async () => {
+        const getUser = await readFile(usersPath);
+        console.log(JSON.parse(getUser))
+        return JSON.parse(getUser);
+    }
+    return res.render('users', {users});
 })
 
 app.listen(PORT, () => {
