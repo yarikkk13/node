@@ -20,16 +20,6 @@ app.engine('.hbs', handlebars({defaultLayout: false}));
 app.set('views', staticPath);
 
 
-app.get('/ping', (req, res) => {
-    // console.log(req);
-    // res.send()
-    // res.end()
-    // res.status(404).json({name:'dima'})
-    // res.write()
-
-    res.send('ping')
-})
-
 app.post('/auth', (req, res) => {
     const {name, password} = req.body
     const user = users.find(user => user.name === name)
