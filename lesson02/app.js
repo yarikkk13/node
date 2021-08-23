@@ -5,6 +5,7 @@ const path = require('path');
 const {PORT} = require('./configs/config');
 const {CREATE, NOT_FOUND} = require('./configs/statusCodes.enum');
 const {readFile, writeFile} = require('./helper/async');
+const {use} = require("express/lib/router");
 
 
 const app = express();
@@ -22,23 +23,26 @@ app.set('views', staticPath);
 let loginned = false;
 
 //logination
-
-
-app.post('/login', (req, res) => {
-    const {email, password} = req.body
-    const user = (usersPath.filter(user => user.email === email))
-
+app.post('/login', async (req, res) => {
+    const {email, password} = req.body;
+    const getUserByEmail = async (email) => {
+        const getUser = await readFile(usersPath);
+        const user = JSON.parse(getUser);
+        return await user.find(user => user.email === email);
+    }
+    const user = await getUserByEmail(email);
     if (!user) {
-        return res.status(NOT_FOUND)
-            .json({"message": "This user wasn't found"})
+        return res.status(NOT_FOUND).redirect('/registering');
     }
     if (user.password !== password) {
         return res.status(NOT_FOUND)
             .json({"message": "Check your password"})
+    } else {
+        loginned = true
+        return res.redirect('/users');
     }
-    loginned = true
-    return res.render('users', {users})
-})
+});
+
 //registering
 app.post('/registering', async (req, res) => {
     const {name, email, password} = req.body;
@@ -79,7 +83,7 @@ app.get('/users', async (req, res) => {
         const getUser = await readFile(usersPath);
         return JSON.parse(getUser);
     }
-    users = await getAllUsers()
+    let users = await getAllUsers()
     return res.render('users', {users});
 })
 
