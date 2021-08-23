@@ -44,11 +44,11 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/users', async (req, res) => {
-    const getUsers = async () => {
+    const getAllUsers = async () => {
         const getUser = await readFile(usersPath);
         return JSON.parse(getUser);
     }
-    users = await getUsers()
+    users = await getAllUsers()
     return res.render('users', {users});
 })
 
