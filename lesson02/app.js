@@ -20,7 +20,26 @@ app.set('view engine', '.hbs');
 app.engine('.hbs', handlebars({defaultLayout: false}));
 app.set('views', staticPath);
 
+let loginned = false;
 
+//logination
+
+
+app.post('/login', (req, res) => {
+    const {email, password} = req.body
+    const user = (usersPath.filter(user => user.email === email))
+
+    if (!user) {
+        return res.status(NOT_FOUND)
+            .json({"message": "This user wasn't found"})
+    }
+    if (user.password !== password) {
+        return res.status(NOT_FOUND)
+            .json({"message": "Check your password"})
+    }
+    loginned = true
+    return res.render('users', {users})
+})
 //registering
 app.post('/registering', async (req, res) => {
     const {name, email, password} = req.body;
@@ -40,8 +59,9 @@ app.post('/registering', async (req, res) => {
     return res.redirect('/login');
 });
 // render endpoints
+
 app.get('/login', (req, res) => {
-    res.render('login')
+    res.render('login', {loginned})
 })
 
 app.get('/registering', (req, res) => {
