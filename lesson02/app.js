@@ -2,10 +2,9 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const path = require('path');
 
-
 const {PORT} = require('./configs/config');
 const {BAD_REQUEST, CREATE, NOT_FOUND, UNAUTH} = require('./configs/statusCodes.enum');
-const {readFile, writeFile} = require('./helper/async')
+const {readFile, writeFile} = require('./helper/async');
 
 
 const app = express();
@@ -52,7 +51,12 @@ app.post('/registering', async (req, res) => {
         return await user.find(user => user.email === email);
     }
     if (!user) {
-        await addUsers({name, email, pass, age, id: addId});
+        const writeNewUsers = async (user) => {
+            const users = await getAllUsers();
+            users.push(user);
+            await writeFile(usersPath, JSON.stringify(users));
+        }
+        await writeNewUsers({name, email, password});
         return res.status(CREATE).redirect('/login');
     }
     const user = await getUserData(email);
