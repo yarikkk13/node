@@ -3,7 +3,7 @@ const handlebars = require('express-handlebars');
 const path = require('path');
 
 const {PORT} = require('./configs/config');
-const {BAD_REQUEST, CREATE, NOT_FOUND, UNAUTH} = require('./configs/statusCodes.enum');
+const {CREATE, NOT_FOUND} = require('./configs/statusCodes.enum');
 const {readFile, writeFile} = require('./helper/async');
 
 
@@ -42,24 +42,26 @@ app.post('/login', (req, res) => {
 //registering
 app.post('/registering', async (req, res) => {
     const {name, email, password} = req.body;
-    const getAllUsers = async () => {
+
+    const getUserByEmail = async (email) => {
         const getUser = await readFile(usersPath);
-        return JSON.parse(getUser);
-    }
-    const getUserData = async (email) => {
-        const user = await getAllUsers();
+        const user = JSON.parse(getUser);
         return await user.find(user => user.email === email);
     }
+    const user = await getUserByEmail(email);
     if (!user) {
-        const writeNewUsers = async (user) => {
+        const addUsers = async (user) => {
+            const getAllUsers = async () => {
+                const getUser = await readFile(usersPath);
+                return JSON.parse(getUser);
+            }
             const users = await getAllUsers();
             users.push(user);
             await writeFile(usersPath, JSON.stringify(users));
         }
-        await writeNewUsers({name, email, password});
+        await addUsers({name, email, password});
         return res.status(CREATE).redirect('/login');
     }
-    const user = await getUserData(email);
     return res.redirect('/login');
 });
 // render endpoints
