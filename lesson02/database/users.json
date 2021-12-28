@@ -63,5 +63,10 @@
     "name": "pass",
     "email": "pass@pas.com",
     "password": "password"
+  },
+  {
+    "name": "app",
+    "email": "app@gmail.com",
+    "password": "password"
   }
 ]

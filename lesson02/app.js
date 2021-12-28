@@ -34,7 +34,7 @@ app.post('/login', async (req, res) => {
     if (!user) {
         return res.status(NOT_FOUND).redirect('/registering');
     }
-    if (user.password !== password) {
+    else if (user.password !== password) {
         return res.status(NOT_FOUND)
             .json({"message": "Check your password"})
     } else {
